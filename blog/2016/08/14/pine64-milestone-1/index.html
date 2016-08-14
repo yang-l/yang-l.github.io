@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Pine64 Milestone 1 - Another 404 Page</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="description" content="Pine64 Milestone 1" />
+    <meta name="keywords" content="Pine64" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">Another 404 Page</a></h1>
+        <p>Why 500 here</p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/yang-l">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="yang-l.github.io">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>Pine64 Milestone 1</h1>
+<p>
+After received two <a href="https://www.pine64.com/">Pine64</a> back to a couple of months ago and playing with them since then, some progresses are made here (thanks to <a href="https://github.com/longsleep">longsleep</a> and <a href="https://github.com/umiddelb">umiddelb</a>)
+</p>
+
+<ul class="org-ul">
+<li>build minimum images and load to the microSD card
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-bas">debian@pine64:~$ free -m
+             total       used       free     shared    buffers     cached
+Mem:          1991        115       1876         16          5         43
+-/+ buffers/cache:         66       1924
+Swap:            0          0          0
+</pre>
+</div>
+<ul class="org-ul">
+<li>build kernel (3.10.102 only) and initrd inside Docker container
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-bash">debian@pine64:~$ uname -a
+Linux pine64 3.10.102 #1 SMP PREEMPT Sat Aug 13 01:06:18 UTC 2016 aarch64 GNU/Linux
+</pre>
+</div>
+<ul class="org-ul">
+<li>build Docker version 1.12.0
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-bash">debian@pine64:~$ docker -v
+Docker version 1.12.0, build 8eab29e
+debian@pine64:~$ docker version
+Client:
+ Version:      1.12.0
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   8eab29e
+ Built:        Thu Aug 11 09:45:17 2016
+ OS/Arch:      linux/arm64
+
+Server:
+ Version:      1.12.0
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   8eab29e
+ Built:        Thu Aug 11 09:45:17 2016
+ OS/Arch:      linux/arm64
+debian@pine64:~$ docker info
+Containers: 0
+ Running: 0
+ Paused: 0
+ Stopped: 0
+Images: 0
+Server Version: 1.12.0
+Storage Driver: aufs
+ Root Dir: /var/lib/docker/aufs
+ Backing Filesystem: extfs
+ Dirs: 0
+ Dirperm1 Supported: true
+Logging Driver: json-file
+Cgroup Driver: cgroupfs
+Plugins:
+ Volume: local
+ Network: host bridge overlay null
+Swarm: active
+ NodeID: 930lhkni2lsya1fjvrr06cxn3
+ Is Manager: true
+ ClusterID: 96obug0yiqo90o5f2vjje0ofe
+ Managers: 1
+ Nodes: 1
+ Orchestration:
+  Task History Retention Limit: 5
+ Raft:
+  Snapshot interval: 10000
+  Heartbeat tick: 1
+  Election tick: 3
+ Dispatcher:
+  Heartbeat period: 5 seconds
+ CA configuration:
+  Expiry duration: 3 months
+ Node Address: 192.168.5.133
+Runtimes: runc
+Default Runtime: runc
+Security Options: apparmor seccomp
+Kernel Version: 3.10.102
+Operating System: Debian GNU/Linux 8 (jessie)
+OSType: linux
+Architecture: aarch64
+CPUs: 4
+Total Memory: 1.944 GiB
+Name: pine64
+ID: CZKN:RUOF:ZB2D:6QOK:OSAU:ZG4G:MSUA:6454:CFOL:7F6T:LNQX:K47D
+Docker Root Dir: /var/lib/docker
+Debug Mode (client): false
+Debug Mode (server): false
+Registry: https://index.docker.io/v1/
+Insecure Registries:
+ 127.0.0.0/8
+debian@pine64:~$ free -m
+             total       used       free     shared    buffers     cached
+Mem:          1991        201       1789         16          5         98
+-/+ buffers/cache:         97       1893
+Swap:            0          0          0
+debian@pine64:~$ curl -sL https://github.com/docker/docker/raw/master/contrib/check-config.sh | bash -
+info: reading kernel config from /proc/config.gz ...
+
+Generally Necessary:
+- cgroup hierarchy: properly mounted [/sys/fs/cgroup]
+- apparmor: enabled, but apparmor_parser missing
+    (use "apt-get install apparmor" to fix this)
+- CONFIG_NAMESPACES: enabled
+- CONFIG_NET_NS: enabled
+- CONFIG_PID_NS: enabled
+- CONFIG_IPC_NS: enabled
+- CONFIG_UTS_NS: enabled
+- CONFIG_DEVPTS_MULTIPLE_INSTANCES: enabled
+- CONFIG_CGROUPS: enabled
+- CONFIG_CGROUP_CPUACCT: enabled
+- CONFIG_CGROUP_DEVICE: enabled
+- CONFIG_CGROUP_FREEZER: enabled
+- CONFIG_CGROUP_SCHED: enabled
+- CONFIG_CPUSETS: enabled
+- CONFIG_MEMCG: enabled
+- CONFIG_KEYS: enabled
+- CONFIG_VETH: enabled (as module)
+- CONFIG_BRIDGE: enabled (as module)
+- CONFIG_BRIDGE_NETFILTER: enabled
+- CONFIG_NF_NAT_IPV4: enabled (as module)
+- CONFIG_IP_NF_FILTER: enabled (as module)
+- CONFIG_IP_NF_TARGET_MASQUERADE: enabled (as module)
+- CONFIG_NETFILTER_XT_MATCH_ADDRTYPE: enabled (as module)
+- CONFIG_NETFILTER_XT_MATCH_CONNTRACK: enabled (as module)
+- CONFIG_NF_NAT: enabled (as module)
+- CONFIG_NF_NAT_NEEDED: enabled
+- CONFIG_POSIX_MQUEUE: enabled
+
+Optional Features:
+- CONFIG_USER_NS: enabled
+- CONFIG_SECCOMP: enabled
+- CONFIG_CGROUP_PIDS: missing
+- CONFIG_MEMCG_SWAP: enabled
+- CONFIG_MEMCG_SWAP_ENABLED: enabled
+- CONFIG_MEMCG_KMEM: enabled
+- CONFIG_RESOURCE_COUNTERS: enabled
+- CONFIG_BLK_CGROUP: enabled
+- CONFIG_BLK_DEV_THROTTLING: enabled
+- CONFIG_IOSCHED_CFQ: enabled
+- CONFIG_CFQ_GROUP_IOSCHED: enabled
+- CONFIG_CGROUP_PERF: enabled
+- CONFIG_CGROUP_HUGETLB: enabled
+- CONFIG_NET_CLS_CGROUP: enabled (as module)
+- CONFIG_NETPRIO_CGROUP: enabled (as module)
+- CONFIG_CFS_BANDWIDTH: enabled
+- CONFIG_FAIR_GROUP_SCHED: enabled
+- CONFIG_RT_GROUP_SCHED: enabled
+- CONFIG_IP_VS: enabled (as module)
+- CONFIG_EXT3_FS: missing
+- CONFIG_EXT3_FS_XATTR: missing
+- CONFIG_EXT3_FS_POSIX_ACL: missing
+- CONFIG_EXT3_FS_SECURITY: missing
+    (enable these ext3 configs if you are using ext3 as backing filesystem)
+- CONFIG_EXT4_FS: enabled
+- CONFIG_EXT4_FS_POSIX_ACL: enabled
+- CONFIG_EXT4_FS_SECURITY: enabled
+- Network Drivers:
+  - "overlay":
+    - CONFIG_VXLAN: enabled (as module)
+    Optional (for secure networks):
+    - CONFIG_XFRM_ALGO: enabled (as module)
+    - CONFIG_XFRM_USER: enabled (as module)
+  - "ipvlan":
+    - CONFIG_IPVLAN: missing
+  - "macvlan":
+    - CONFIG_MACVLAN: enabled (as module)
+    - CONFIG_DUMMY: enabled (as module)
+- Storage Drivers:
+  - "aufs":
+    - CONFIG_AUFS_FS: enabled (as module)
+  - "btrfs":
+    - CONFIG_BTRFS_FS: enabled (as module)
+  - "devicemapper":
+    - CONFIG_BLK_DEV_DM: enabled (as module)
+    - CONFIG_DM_THIN_PROVISIONING: enabled (as module)
+  - "overlay":
+    - CONFIG_OVERLAY_FS: missing
+  - "zfs":
+    - /dev/zfs: missing
+    - zfs command: missing
+    - zpool command: missing
+
+Limits:
+- /proc/sys/kernel/keys/root_maxkeys: 1000000
+
+debian@pine64:~$
+</pre>
+</div>
+
+<p>
+TODO
+</p>
+<ul class="org-ul">
+<li>build kernel version 4.x
+</li>
+<li>run dockerised services on Pine64
+</li>
+</ul>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-08-14</span>
+        <span title="last modification date" class="post-info">2016-08-14</span>
+        <span title="tags" class="post-info"><a href="/tags/pine64/">Pine64</a></span>
+        <span title="author" class="post-info"></span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:i13m &lt;at&gt; ThinkPad &lt;dot&gt; Home"></a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
