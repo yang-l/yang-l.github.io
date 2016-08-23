@@ -4,31 +4,23 @@
     <title>@Home</title>
     <link>http://yang-l.github.io/</link>
     <description></description>
-    <pubDate>Sun, 14 Aug 2016 14:36:55 NZST</pubDate>
-    <lastBuildDate>Sun, 14 Aug 2016 14:36:55 NZST</lastBuildDate>
+    <pubDate>Tue, 23 Aug 2016 22:41:04 NZST</pubDate>
+    <lastBuildDate>Tue, 23 Aug 2016 22:41:04 NZST</lastBuildDate>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>Org-page static site generator (https://github.com/kelvinh/org-page)</generator>
-    <item>
-      <title>Untitled</title>
-      <link>http://yang-l.github.io/blog/2016/08/14/untitled/</link>
-      <description><![CDATA[<div>
-<div class="post">
-<h1>Untitled</h1>
-<p>
-Personal site managed by emacs, org mode, git and org-page.
-</p>
-
-</div>
-</div>]]></description>
-      <pubDate>2016-08-14</pubDate>
-      <guid>http://yang-l.github.io/blog/2016/08/14/untitled/</guid>
-    </item>
     <item>
       <title>Pine64 Milestone 1</title>
       <link>http://yang-l.github.io/blog/2016/08/14/pine64-milestone-1</link>
       <description><![CDATA[Pine64 Milestone 1]]></description>
-      <pubDate>2016-08-14</pubDate>
+      <pubDate>2016-08-23</pubDate>
       <guid>http://yang-l.github.io/blog/2016/08/14/pine64-milestone-1</guid>
+    </item>
+    <item>
+      <title>Pine64 Milestone 2</title>
+      <link>http://yang-l.github.io/blog/2016/08/23/pine64-milestone-2</link>
+      <description><![CDATA[Pine64 Milestone 2]]></description>
+      <pubDate>2016-08-23</pubDate>
+      <guid>http://yang-l.github.io/blog/2016/08/23/pine64-milestone-2</guid>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Pine64 Milestone 2 - @Home</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="description" content="Pine64 Milestone 2" />
+    <meta name="keywords" content="Pine64" />
+    <link rel="stylesheet" href="/media/css/main.css" type="text/css">
+    <link rel="stylesheet" href="/media/css/prettify.css" type="text/css">
+  </head>
+  <body class="container">
+    <div>
+      <header class="masthead">
+        <h1 class="masthead-title"><a href="/">@Home</a></h1>
+        <p></p>
+        <ul>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/tags/">Tags</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="https://github.com/yang-l">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+        <form method="get" id="searchform" action="//www.google.com/search">
+          <input type="text" class="field" name="q" id="s" placeholder="Search">
+          <input type="hidden" name="as_sitesearch" value="yang-l.github.io">
+        </form>
+      </header>
+    </div>
+
+<div>
+<div class="post">
+<h1>Pine64 Milestone 2</h1>
+<p>
+After few days of playing docker on Pine64, a couple of interesting points can be made. The first one is to run docker inside docker
+</p>
+
+<p>
+On the host, it shows
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">debian@pine64:~$ docker version
+Client:
+ Version:      1.12.0
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   8eab29e
+ Built:        Thu Aug 11 09:45:17 2016
+ OS/Arch:      linux/arm64
+
+Server:
+ Version:      1.12.0
+ API version:  1.24
+ Go version:   go1.6.3
+ Git commit:   8eab29e
+ Built:        Thu Aug 11 09:45:17 2016
+ OS/Arch:      linux/arm64
+debian@pine64:~$
+</pre>
+</div>
+
+<p>
+Then load the docker as
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">docker run -ti --rm \
+-v /usr/bin/docker:/usr/bin/docker \
+-v /usr/bin/docker-containerd:/usr/bin/docker-containerd \
+-v /usr/bin/docker-containerd-ctr:/usr/bin/docker-containerd-ctr \
+-v /usr/bin/docker-containerd-shim:/usr/bin/docker-containerd-shim \
+-v /usr/bin/dockerd:/usr/bin/dockerd \
+-v /usr/bin/docker-proxy:/usr/bin/docker-proxy \
+-v /usr/bin/docker-runc:/usr/bin/docker-runc \
+-v /var/run/dockerr.sock:/var/run/docker.sock \
+aarch64/debian
+</pre>
+</div>
+
+<p>
+Now it can run docker inside docker (inside docker insider docker ...)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">debian@pine64:~$ docker run -ti --rm -v /usr/bin/docker:/usr/bin/docker -v /usr/bin/docker-containerd:/usr/bin/docker-containerd -v /usr/bin/docker-containerd-ctr:/usr/bin/docker-containerd-ctr -v /usr/bin/docker-containerd-shim:/usr/bin/docker-containerd-shim -v /usr/bin/dockerd:/usr/bin/dockerd -v /usr/bin/docker-proxy:/usr/bin/docker-proxy -v /usr/bin/docker-runc:/usr/bin/docker-runc -v /var/run/docker.sock:/var/run/docker.sock aarch64/debian
+root@3ed95b56f74b:/# uname -a
+Linux 3ed95b56f74b 3.10.102 #1 SMP PREEMPT Mon Aug 22 07:28:14 UTC 2016 aarch64 GNU/Linux
+root@3ed95b56f74b:/#
+root@3ed95b56f74b:/# docker run -ti --rm -v /usr/bin/docker:/usr/bin/docker -v /usr/bin/docker-containerd:/usr/bin/docker-containerd -v /usr/bin/docker-containerd-ctr:/usr/bin/docker-containerd-ctr -v /usr/bin/docker-containerd-shim:/usr/bin/docker-containerd-shim -v /usr/bin/dockerd:/usr/bin/dockerd -v /usr/bin/docker-proxy:/usr/bin/docker-proxy -v /usr/bin/docker-runc:/usr/bin/docker-runc -v /var/run/docker.sock:/var/run/docker.sock aarch64/debian
+root@f7ef0ed3e6c6:/# uname -a
+Linux f7ef0ed3e6c6 3.10.102 #1 SMP PREEMPT Mon Aug 22 07:28:14 UTC 2016 aarch64 GNU/Linux
+root@f7ef0ed3e6c6:/#
+root@f7ef0ed3e6c6:/# docker run -ti --rm -v /usr/bin/docker:/usr/bin/docker -v /usr/bin/docker-containerd:/usr/bin/docker-containerd -v /usr/bin/docker-containerd-ctr:/usr/bin/docker-containerd-ctr -v /usr/bin/docker-containerd-shim:/usr/bin/docker-containerd-shim -v /usr/bin/dockerd:/usr/bin/dockerd -v /usr/bin/docker-proxy:/usr/bin/docker-proxy -v /usr/bin/docker-runc:/usr/bin/docker-runc -v /var/run/docker.sock:/var/run/docker.sock aarch64/debian
+root@f026e8e68fb9:/# uname -a
+Linux f026e8e68fb9 3.10.102 #1 SMP PREEMPT Mon Aug 22 07:28:14 UTC 2016 aarch64 GNU/Linux
+root@f026e8e68fb9:/#
+root@f026e8e68fb9:/# docker run -ti --rm -v /usr/bin/docker:/usr/bin/docker -v /usr/bin/docker-containerd:/usr/bin/docker-containerd -v /usr/bin/docker-containerd-ctr:/usr/bin/docker-containerd-ctr -v /usr/bin/docker-containerd-shim:/usr/bin/docker-containerd-shim -v /usr/bin/dockerd:/usr/bin/dockerd -v /usr/bin/docker-proxy:/usr/bin/docker-proxy -v /usr/bin/docker-runc:/usr/bin/docker-runc -v /var/run/docker.sock:/var/run/docker.sock aarch64/debian
+root@e1c62789b81b:/# uname -a
+Linux e1c62789b81b 3.10.102 #1 SMP PREEMPT Mon Aug 22 07:28:14 UTC 2016 aarch64 GNU/Linux
+root@e1c62789b81b:/#
+root@e1c62789b81b:/# exit
+exit
+root@f026e8e68fb9:/#
+root@f026e8e68fb9:/# exit
+exit
+root@f7ef0ed3e6c6:/#
+root@f7ef0ed3e6c6:/# exit
+exit
+root@3ed95b56f74b:/#
+root@3ed95b56f74b:/# exit
+exit
+debian@pine64:~$
+</pre>
+</div>
+
+<p>
+This approach would be used to setup a development docker images and run other docker developments inside the development docker
+</p>
+
+</div>
+</div>
+    <div>
+      <div class="post-meta">
+        <span title="post date" class="post-info">2016-08-23</span>
+        <span title="last modification date" class="post-info">2016-08-23</span>
+        <span title="tags" class="post-info"><a href="/tags/pine64/">Pine64</a></span>
+        <span title="author" class="post-info"></span>
+      </div>
+      <section>
+        <h1>Comments</h1>
+      </section>
+      <script src="//code.jquery.com/jquery-latest.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="/media/js/main.js"></script>
+      <div class="footer">
+        <p>Generated by <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.x (<a href="http://orgmode.org">Org mode</a> 8.x)</p>
+        <p>
+          Copyright &copy; 2012 - <span id="footerYear"></span> <a href="mailto:i13m &lt;at&gt; ThinkPad &lt;dot&gt; Home"></a>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          Powered by <a href="https://github.com/kelvinh/org-page" target="_blank">org-page</a>
+          <script type="text/javascript">document.getElementById("footerYear").innerHTML = (new Date()).getFullYear();</script>
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
