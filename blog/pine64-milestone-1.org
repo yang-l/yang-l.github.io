@@ -10,7 +10,7 @@
 After received two [[https://www.pine64.com/][Pine64]] back to a couple of months ago and playing with them since then, some progresses are made here (thanks to [[https://github.com/longsleep][longsleep]] and [[https://github.com/umiddelb][umiddelb]])
 
 - build minimum images and load to the microSD card
-#+BEGIN_SRC bas
+#+BEGIN_SRC bash
 debian@pine64:~$ free -m
              total       used       free     shared    buffers     cached
 Mem:          1991        115       1876         16          5         43
