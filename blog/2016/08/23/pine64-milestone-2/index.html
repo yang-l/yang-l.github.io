@@ -75,7 +75,7 @@ Then load the docker as
 -v /usr/bin/dockerd:/usr/bin/dockerd \
 -v /usr/bin/docker-proxy:/usr/bin/docker-proxy \
 -v /usr/bin/docker-runc:/usr/bin/docker-runc \
--v /var/run/dockerr.sock:/var/run/docker.sock \
+-v /var/run/docker.sock:/var/run/docker.sock \
 aarch64/debian
 </pre>
 </div>
@@ -121,12 +121,48 @@ debian@pine64:~$
 This approach would be used to setup a development docker images and run other docker developments inside the development docker
 </p>
 
+<p>
+Another one is to run aarch64 docker images (Pine64) on x86_64 hosts (and vice versa). This mothod is based on qemu emulation, e.g. qemu-aarch64-static built for x86_64, and need to register the qemu bin in binfmt_misc kernel module
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">$ echo ':aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:' | sudo tee /proc/sys/fs/binfmt_misc/register
+
+:aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:
+</pre>
+</div>
+
+<p>
+By now docker images in different architectures (in this case they are x86_64 and aarch64) can be run on x86_host
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-bash">$ uname -a
+
+Linux testing-gce-66a87dc2-6670-46aa-91f7-1ffb200b2d7f 3.19.0-66-generic #74~14.04.1-Ubuntu SMP Tue Jul 19 19:56:11 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+
+$ docker run -i --rm x86_64 uname -a
+
+Linux fc3761fb6f70 3.19.0-66-generic #74~14.04.1-Ubuntu SMP Tue Jul 19 19:56:11 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+
+$ docker run -i --rm -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static aarch64/debian uname -a
+
+Linux 78d63a4321dc 3.19.0-66-generic #74~14.04.1-Ubuntu SMP Tue Jul 19 19:56:11 UTC 2016 aarch64 GNU/Linux
+</pre>
+</div>
+
+<p>
+One drawback of this is that a aarch64 docker image cannot be built on a x86_64 host via qemu emulation. This may not functional properly right now and need more research on this.
+</p>
+
 </div>
 </div>
     <div>
       <div class="post-meta">
         <span title="post date" class="post-info">2016-08-23</span>
-        <span title="last modification date" class="post-info">2016-08-23</span>
+        <span title="last modification date" class="post-info">2016-08-27</span>
         <span title="tags" class="post-info"><a href="/tags/pine64/">Pine64</a></span>
         <span title="author" class="post-info"></span>
       </div>
